@@ -14,8 +14,8 @@ import (
 )
 
 type Item struct {
-  id int
-  name string
+  Id int
+  Name string
 }
 
 func main() {
@@ -42,7 +42,7 @@ func main() {
     )
     id := c.Param("id")
     row := db.QueryRow("SELECT id, name from item where id = ?;", id)
-    err = row.Scan(&item.id, &item.name)
+    err = row.Scan(&item.Id, &item.Name)
     if err != nil {
       // if no result send null
       result = gin.H {
@@ -51,8 +51,8 @@ func main() {
       }
     } else {
       result = gin.H {
-        "id": item.id,
-        "name": item.name,
+        "id": item.Id,
+        "name": item.Name,
       }
     }
     c.JSON(http.StatusOK, result)
@@ -69,7 +69,7 @@ func main() {
       fmt.Print(err.Error())
     }
     for rows.Next() {
-      err = rows.Scan(&item.id, &item.name)
+      err = rows.Scan(&item.Id, &item.Name)
       items = append(items, item)
       if err != nil {
         fmt.Print(err.Error())
@@ -77,7 +77,7 @@ func main() {
     }
     defer rows.Close()
     c.JSON(http.StatusOK, gin.H {
-      "result": items,
+      "result": items,  // currently returning {}...
       "count": len(items),
     })
   })
