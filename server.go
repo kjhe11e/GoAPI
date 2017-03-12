@@ -13,6 +13,11 @@ import (
   _ "github.com/go-sql-driver/mysql"
 )
 
+type Item struct {
+  id int
+  name string
+}
+
 func main() {
   db, err := sql.Open("mysql", "root:password@tcp(localhost:3306)/go_api_test")
   if err != nil {
@@ -26,12 +31,8 @@ func main() {
     fmt.Print(err.Error())
   }
 
-  type Item struct {
-    id int
-    name string
-  }
-
   router := gin.Default()
+
   // TODO: move API handlers out of main func
   // GET an Item
   router.GET("/item/:id", func(c *gin.Context) {
@@ -50,8 +51,8 @@ func main() {
       }
     } else {
       result = gin.H {
-        "result": item,
-        "count": 1,
+        "id": item.id,
+        "name": item.name,
       }
     }
     c.JSON(http.StatusOK, result)
