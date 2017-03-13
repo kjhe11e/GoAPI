@@ -105,5 +105,27 @@ func main() {
     })
   })
 
+  // PUT - update item details
+  router.PUT("/item/:id", func(c *gin.Context) {
+    var buffer bytes.Buffer
+    id := c.Query("id")
+    name := c.PostForm("name")
+    stmt, err := db.Prepare("Update item set name= ? where id= ?;")
+    if err != nil {
+      fmt.Print(err.Error())
+    }
+    _, err = stmt.Exec(name, id)
+    if err != nil {
+      fmt.Print(err.Error())
+    }
+
+    buffer.WriteString(name)
+    defer stmt.Close()
+    tmpName := buffer.String()
+    c.JSON(http.StatusOK, gin.H {
+      "message": fmt.Sprintf("Successfully updated to %s", tmpName),
+    })
+  })
+
   router.Run(":3000")
 }
