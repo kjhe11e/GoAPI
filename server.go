@@ -127,5 +127,21 @@ func main() {
     })
   })
 
+  // DELETE an item
+  router.DELETE("/item", func( c *gin.Context) {
+    id := c.Query("id")
+    stmt, err := db.Prepare("delete from item where id= ?;")
+    if err != nil {
+      fmt.Print(err.Error())
+    }
+    _, err = stmt.Exec(id)
+    if err != nil {
+      fmt.Print(err.Error())
+    }
+    c.JSON(http.StatusOK, gin.H {
+      "message": fmt.Sprintf("Successfully deleted user: %s", id),
+    })
+  })
+
   router.Run(":3000")
 }
